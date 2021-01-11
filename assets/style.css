@@ -18,3 +18,10 @@
     height: 20px;
     width: auto;
 }
+
+.addTaskIcon{
+    height: 20px;
+    width: auto;
+    margin: 10px;
+    margin-left: 20px;
+}
