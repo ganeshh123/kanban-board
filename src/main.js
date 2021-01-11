@@ -20,6 +20,8 @@ let editableItems = () => {
         listNameDOM.contentEditable = true
         listNameDOM.addEventListener('keyup', (event) => {
             if(event.which == 13 && document.activeElement == listNameDOM){
+                event.preventDefault()
+                event.stopPropagation()
                 let listId = event.target.parentNode.id
                 lists[listId]['listName'] = event.target.innerText
                 event.target.childNodes[1].remove()
@@ -35,6 +37,8 @@ let editableItems = () => {
         taskCardContentDOM.contentEditable = true
         taskCardContentDOM.addEventListener('keyup', (event) => {
             if(event.which == 13 && document.activeElement == taskCardContentDOM){
+                event.preventDefault()
+                event.stopPropagation()
                 let taskId = event.target.parentNode.id
                 let listId = event.target.parentNode.parentNode.parentNode.id
                 lists[listId]['listItems'][taskId]['taskContent'] = event.target.innerText
@@ -87,6 +91,14 @@ class List extends React.Component {
         setTimeout(this.props.refresh(), 2000)
     }
 
+    keyPress = (event) => {
+        if(event.key === 'Enter'){
+            event.preventDefault()
+            event.stopPropagation()
+            this.addTaskClicked(event)
+        }
+    }
+
     render = () => {
         return(
             <div class="listContainer" id={this.props.list['id']}>
@@ -103,7 +115,12 @@ class List extends React.Component {
                     })}
                 </div>
                 <div class="newListItem">
-                    <input type="text" class="newListItemInput" placeholder="New Task ..." />
+                    <input 
+                        type="text"
+                        class="newListItemInput"
+                        placeholder="New Task ..." 
+                        onKeyDown = {this.keyPress}
+                    />
                     <img 
                         class="icon addTaskIcon"
                         src="./assets/plus.svg"
@@ -161,6 +178,7 @@ let startUp = () => {
     }
 
     ReactDOM.render(<App />, document.querySelector('body'))
+    editableItems()
 }
 
 startUp()
