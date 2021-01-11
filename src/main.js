@@ -13,44 +13,6 @@ let storeList = () => {
     lists = JSON.parse(localStorage.getItem('listStore'))
 }
 
-let editableItems = () => {
-    /* Editable List Name */
-    let allListNameDOM = document.querySelectorAll('.listName')
-    allListNameDOM.forEach((listNameDOM) => {
-        listNameDOM.contentEditable = true
-        listNameDOM.addEventListener('keyup', (event) => {
-            if(event.which == 13 && document.activeElement == listNameDOM){
-                event.preventDefault()
-                event.stopPropagation()
-                let listId = event.target.parentNode.id
-                lists[listId]['listName'] = event.target.innerText
-                event.target.childNodes[1].remove()
-                storeList()
-                listNameDOM.blur()
-            }
-        })
-    })
-
-    /* Editable List Items */
-    let allTaskCardContentDOM = document.querySelectorAll('.taskCardContent')
-    allTaskCardContentDOM.forEach((taskCardContentDOM) => {
-        taskCardContentDOM.contentEditable = true
-        taskCardContentDOM.addEventListener('keyup', (event) => {
-            if(event.which == 13 && document.activeElement == taskCardContentDOM){
-                event.preventDefault()
-                event.stopPropagation()
-                let taskId = event.target.parentNode.id
-                let listId = event.target.parentNode.parentNode.parentNode.id
-                lists[listId]['listItems'][taskId]['taskContent'] = event.target.innerText
-                event.target.childNodes[1].remove()
-                storeList()
-                taskCardContentDOM.blur()
-            }
-        })
-    })
-
-}
-
 class Task extends React.Component {
 
     deleteTaskClicked = (event) => {
@@ -156,6 +118,49 @@ class App extends React.Component{
                 </div>
             )
     }
+}
+
+let editableItems = () => {
+    /* Editable List Name */
+    let allListNameDOM = document.querySelectorAll('.listName')
+    allListNameDOM.forEach((listNameDOM) => {
+        listNameDOM.contentEditable = true
+        listNameDOM.addEventListener('keyup', (event) => {
+            if(event.which == 13 && document.activeElement == listNameDOM){
+                event.preventDefault()
+                event.stopPropagation()
+                let listId = event.target.parentNode.id
+                let newListName = event.target.innerText
+                newListName = newListName.replace(/\n/g, '')
+                lists[listId]['listName'] = newListName
+                storeList()
+                listNameDOM.blur()
+                ReactDOM.render(<App />, document.querySelector('body'))
+            }
+        })
+    })
+
+    /* Editable List Items */
+    let allTaskCardContentDOM = document.querySelectorAll('.taskCardContent')
+    allTaskCardContentDOM.forEach((taskCardContentDOM) => {
+        taskCardContentDOM.contentEditable = true
+        taskCardContentDOM.addEventListener('keyup', (event) => {
+            if(event.which == 13 && document.activeElement == taskCardContentDOM){
+                event.preventDefault()
+                event.stopPropagation()
+                let taskId = event.target.parentNode.id
+                let listId = event.target.parentNode.parentNode.parentNode.id
+                let newTaskName = event.target.innerText
+                newTaskName = newTaskName.replace(/\n/g, '')
+                console.log(newTaskName)
+                lists[listId]['listItems'][taskId]['taskContent'] = newTaskName
+                storeList()
+                taskCardContentDOM.blur()
+                ReactDOM.render(<App />, document.querySelector('body'))
+            }
+        })
+    })
+
 }
 
 let startUp = () => {
