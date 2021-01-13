@@ -52,7 +52,7 @@ class Task extends React.Component {
 
 class List extends React.Component {
 
-    addListClicked = (event) => {
+    addTaskClicked = (event) => {
         let listId = event.target.parentNode.parentNode.id
         let newTaskId = Math.random().toString(36).substring(2, 15)
         let newTaskContent = document.querySelector('#' + listId).childNodes[2].childNodes[0].value
@@ -122,7 +122,7 @@ class List extends React.Component {
                         class="icon addTaskIcon"
                         src="./assets/plus.svg"
                         alt="Add Task"
-                        onClick={this.addListClicked}
+                        onClick={this.addTaskClicked}
                     />
                 </div>
             </div>
