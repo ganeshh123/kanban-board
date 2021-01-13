@@ -70,17 +70,7 @@ class List extends React.Component {
 
     addTaskClicked = (event) => {
         let listId = event.target.parentNode.parentNode.id
-        let newTaskId = Math.random().toString(36).substring(2, 15)
-        let newTaskContent = document.querySelector('#' + listId).childNodes[2].childNodes[0].value
-        if(newTaskContent && newTaskContent != ''){
-            lists[listId]['listItems'].push({
-                'id': newTaskId,
-                'taskContent': newTaskContent
-            })
-        }
-        storeList()
-        document.querySelector('#' + listId).childNodes[2].childNodes[0].value = ''
-        setTimeout(this.props.refresh(), 2000)
+        this.addTask(event.target.parentNode.parentNode.id)
     }
 
     deleteListClicked = (event) => {
@@ -98,6 +88,23 @@ class List extends React.Component {
             this.props.refresh()
             event.target.blur()
         }
+        if(event.target.className === 'newListItemInput' && event.key === 'Enter'){
+            this.addTask(event.target.parentNode.parentNode.id)
+        }
+    }
+
+    addTask = (listId) => {
+        let newTaskId = Math.random().toString(36).substring(2, 15)
+        let newTaskContent = document.querySelector('#' + listId).childNodes[2].childNodes[0].value
+        if(newTaskContent && newTaskContent != ''){
+            lists[listId]['listItems'].push({
+                'id': newTaskId,
+                'taskContent': newTaskContent
+            })
+        }
+        storeList()
+        document.querySelector('#' + listId).childNodes[2].childNodes[0].value = ''
+        setTimeout(this.props.refresh(), 2000)
     }
 
     titleTextChanged = (event) => {
@@ -213,7 +220,6 @@ class App extends React.Component{
         }
         lists[newListId] = newList
         storeList()
-        window.setTimeout(editableItems(), 2000)
         this.refreshApp()
     }
 
@@ -222,7 +228,6 @@ class App extends React.Component{
         this.setState({
             appLists: lists
         })
-        editableItems()
     }
 
     render = () => {
@@ -236,7 +241,7 @@ class App extends React.Component{
                     })}
                 </DragDropContext>
                 <img 
-                    class="icon addTaskIcon"
+                    class="icon addListIcon"
                     src="./assets/plus.svg"
                     alt="Add Task"
                     onClick={this.createList}
@@ -274,7 +279,6 @@ let startUp = () => {
     }
 
     ReactDOM.render(<App />, document.querySelector('body'))
-    editableItems()
 }
 
 startUp()
