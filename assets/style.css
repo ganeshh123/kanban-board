@@ -9,9 +9,6 @@ body{
     justify-content: center;
     align-items: center;
     background: url(https://images.unsplash.com/photo-1528164344705-47542687000d?ixid=MXwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHw%3D&ixlib=rb-1.2.1&auto=format&fit=crop&w=1969&q=80) no-repeat center center fixed; 
-    -webkit-background-size: cover;
-    -moz-background-size: cover;
-    -o-background-size: cover;
     background-size: cover;
     overflow-x: auto;
 }
@@ -33,11 +30,11 @@ body{
     align-items: center;
     margin: 0px 20px 0px 20px;
     padding: 0px 10px 0px 10px;
-    min-height: 600px;
-    min-width: 300px;
-    width: 20%;
+    min-height: 650px;
     height: 90%;
     max-height: 1000px;
+    min-width: 300px;
+    width: 20%;
     background: rgba( 255, 255, 255, 0.7 );
     box-shadow: 0 8px 32px 0 rgba( 31, 38, 135, 0.37 );
     border-radius: 10px;
@@ -48,32 +45,53 @@ body{
     flex-direction: row;
     justify-content: space-between;
     align-items: flex-start;
-    width: 100%;
-    padding-left: 30px;
-    padding-top: 10px;
+    padding: 10px 0px 0px 30px; 
     margin-bottom: 15px;
+    width: 100%;
     height: 5%;
 }
 
+.deleteListIcon{
+    height: 40px;
+    width: auto;
+    margin: 10px;
+    cursor: pointer;
+}
+
 .taskList{
-    min-height: 450px !important;
-    height: 85%;
-    width: 100%;
-    overflow-y: auto;
     display: flex;
     flex-direction: column;
     justify-content: flex-start;
     align-items: center;
+    min-height: 450px;
+    height: 85%;
+    width: 100%;
+    overflow-y: auto;
+  
 }
 
+
 .newListItem{
-    margin-top: 25px;
     display: flex;
     flex-direction: row;
-    justify-content: space-around;
-    align-items: flex-end;
-    height: 10%;
+    justify-content: space-between;
+    align-items: center;
+    margin-top: 10px;
     padding-bottom: 10px;
+    height: 10%;
+    width: 100%;
+}
+
+.newListItemInput{
+    margin: 10px;
+    height: 30px;
+    width: 100%;
+}
+
+.addTaskIcon{
+    height: 30px;
+    width: auto;
+    margin: 10px;
 }
 
 .taskCard{
@@ -81,47 +99,42 @@ body{
     flex-direction: row;
     justify-content: space-between;
     align-items: flex-start;
-    width: 90%;
     margin: 10px;
+    width: 90%;
     background: rgba( 255, 255, 255, 0.40 );
-    box-shadow: 0 8px 32px 0 rgba( 31, 38, 135, 0.37 );
     backdrop-filter: blur( 17.5px );
-    border-radius: 10px;
     box-shadow: 0px 3px 15px rgba(0,0,0,0.2);
+    border-radius: 10px;
 }
+
 .taskCardContent{
     font-size: 20px;
     margin-left: 20px;
     cursor: text !important;
     padding: 5px;
 }
-.icon{
-    margin: 10px;
-    height: 20px;
-    width: auto;
-    cursor: pointer !important;
-}
 
-.addTaskIcon{
-    height: 20px;
+.deleteTaskIcon{
+    height: 30px;
     width: auto;
     margin: 10px;
-    margin-left: 20px;
+    cursor: pointer;
 }
 
 .addListIcon{
+    padding: 0px 15px 0px 15px;
+    margin: 0px 20px 0px 20px;
+    min-height: 650px;
     height: 90%;
     max-height: 1000px;
     width: 40px;
-    padding: 0px 15px 0px 15px;
-    margin: 0px 20px 0px 20px;
     background: rgba( 255, 255, 255, 0.45 );
     box-shadow: 0 8px 32px 0 rgba( 31, 38, 135, 0.37 );
-    -webkit-backdrop-filter: blur( 8.0px );
     border-radius: 10px;
+    cursor: pointer;
 }
 
-
+/* Animations */
 @keyframes fadein {
     from { opacity: 0; }
     to { opacity: 1; }
@@ -131,6 +144,7 @@ body{
     animation: fadein 0.5s;
 }
 
+/* Scrollbar Tweaks */
 ::-webkit-scrollbar {
     background-color: rgba( 255, 255, 255, 0 );
     height: 7px;

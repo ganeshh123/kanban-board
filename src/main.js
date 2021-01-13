@@ -4,10 +4,9 @@ let {DragDropContext, Draggable, Droppable } = window.ReactBeautifulDnd;
 
 let lists = {}
 
-let storeList = () => {
-    console.log('Writing Updated Lists to Storage')
+let storeLists = () => {
+    console.log('Writing Lists to Storage')
     console.log(lists)
-    console.log('List Storage Updated ')
     window.localStorage.setItem('listStore', JSON.stringify(lists))
     console.log('Set Correctly')
     lists = JSON.parse(localStorage.getItem('listStore'))
@@ -22,7 +21,7 @@ class Task extends React.Component {
             return task['id'] === taskId
         })
         lists[listId]['listItems'].splice(index, 1)
-        storeList()
+        storeLists()
         setTimeout(this.props.refresh(), 1000)
     }
 
@@ -76,7 +75,7 @@ class List extends React.Component {
     deleteListClicked = (event) => {
         let listId = event.target.parentNode.parentNode.id
         lists[listId] = undefined
-        storeList()
+        storeLists()
         setTimeout(this.props.refresh(), 2000)
     }
 
@@ -84,7 +83,7 @@ class List extends React.Component {
         if(event.key === 'Enter' || event.key === 'Escape'){
             event.preventDefault()
             event.stopPropagation()
-            storeList()
+            storeLists()
             this.props.refresh()
             event.target.blur()
         }
@@ -102,7 +101,7 @@ class List extends React.Component {
                 'taskContent': newTaskContent
             })
         }
-        storeList()
+        storeLists()
         document.querySelector('#' + listId).childNodes[2].childNodes[0].value = ''
         setTimeout(this.props.refresh(), 2000)
     }
@@ -158,7 +157,7 @@ class List extends React.Component {
                     />
                     <img 
                         class="icon addTaskIcon"
-                        src="./assets/plus.svg"
+                        src="./assets/circle-right.svg"
                         alt="Add Task"
                         onClick={this.addTaskClicked}
                     />
@@ -182,7 +181,7 @@ class App extends React.Component{
             let originIndex = result.source.index
             if(!result.destination){
                 console.log('crap')
-                storeList()
+                storeLists()
                 this.refreshApp()
                 return
             }else{
@@ -201,7 +200,7 @@ class App extends React.Component{
 
                 console.log(lists)
                 
-                storeList()
+                storeLists()
                 this.refreshApp()
             }
             
@@ -219,7 +218,7 @@ class App extends React.Component{
             ]
         }
         lists[newListId] = newList
-        storeList()
+        storeLists()
         this.refreshApp()
     }
 
@@ -275,7 +274,7 @@ let startUp = () => {
         }
         lists['y0zitt47gfb'] = list1
         lists['f0ziqq7gfn'] = list2
-        storeList()
+        storeLists()
     }
 
     ReactDOM.render(<App />, document.querySelector('body'))
