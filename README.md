@@ -12,16 +12,16 @@ https://ganeshh123.github.io/kanban-board/
 - Persistent Client Side Storage
 
 ## Building
-There is no need to build. The app uses script tags to load in React, React DND, and Babel.
+There is no need to build. The app uses script tags to load in React, React Beautiful DND, Babel and Skeleton CSS.
 ### Running Locally
 1. Download or clone this repository
 2. Open index.html
 ### Technology Stack
-- React for List and Task Components
-- React DND for draggable tasks
-- Javascript Browser Local Storage
-- Compiled with Babel
-
+- [React](https://github.com/facebook/react) for List and Task Components
+- [react-beautiful-dnd](https://github.com/atlassian/react-beautiful-dnd) for draggable tasks
+- Javascript Browser [Local Storage](https://developer.mozilla.org/en-US/docs/Web/API/Window/localStorage)
+- Compiled with [Babel](https://babeljs.io/)
+- Minor Styling from [Skeleton](http://getskeleton.com/)
 ## Credits
 - [Icons from IcoMoon](https://icomoon.io/app/#/select)
 - [Background Image](https://unsplash.com/photos/zxcBR3zNc7I)
