@@ -26,6 +26,17 @@ class Task extends React.Component {
         setTimeout(this.props.refresh(), 1000)
     }
 
+    taskContentChanged = (event) => {
+        let listId = event.target.parentNode.parentNode.parentNode.id
+        let taskId = event.target.parentNode.id
+        let newTaskContent = event.target.innerText
+        //console.log(listId + ' ' + taskId + ' ' + newTaskContent)
+        let index = lists[listId]['listItems'].findIndex((task) => {
+            return task['id'] === taskId
+        })
+        lists[listId]['listItems'][index]['taskContent'] = newTaskContent
+    }
+
     render = () => {
 
         return(
@@ -38,7 +49,12 @@ class Task extends React.Component {
                         {...provided.dragHandleProps}
                         ref={provided.innerRef}
                     >
-                        <p class="taskCardContent">
+                        <p 
+                            class="taskCardContent"
+                            contentEditable = "true"
+                            onInput={this.taskContentChanged}
+                            onKeyDown={this.props.keyPress}
+                        >
                         {this.props.task['taskContent']}
                         </p>
                         <img class="icon deleteTaskIcon" src="./assets/cancel-circle.svg" alt="Delete Task" onClick={this.deleteTaskClicked}/>
@@ -75,18 +91,32 @@ class List extends React.Component {
     }
 
     keyPress = (event) => {
-        if(event.key === 'Enter'){
+        if(event.key === 'Enter' || event.key === 'Escape'){
             event.preventDefault()
             event.stopPropagation()
-            this.addTaskClicked(event)
+            storeList()
+            this.props.refresh()
+            event.target.blur()
         }
+    }
+
+    titleTextChanged = (event) => {
+        let listId = event.target.parentNode.parentNode.id
+        let newListName = event.target.innerText
+        lists[listId]['listName'] = newListName
     }
 
     render = () => {
         return(
             <div class="listContainer" id={this.props.list['id']}>
                 <div class="listHeader">
-                    <h4 class="listName">{this.props.list['listName']}</h4>
+                    <h4 class="listName" 
+                        contentEditable="true" 
+                        onInput={this.titleTextChanged}
+                        onKeyDown = {this.keyPress}
+                    >
+                        {this.props.list['listName']}
+                    </h4>
                     <img class="icon deleteListIcon" src="./assets/cancel-circle.svg" alt="Delete List" onClick={this.deleteListClicked}/>
                 </div>
                 <Droppable droppableId={this.props.list['id']}>
@@ -101,6 +131,7 @@ class List extends React.Component {
                                             task={listItem} 
                                             refresh = {this.props.refresh}
                                             index={index}
+                                            keyPress={this.keyPress}
                                         />
                                 }
                             })}
@@ -213,52 +244,6 @@ class App extends React.Component{
                 </div>
             )
     }
-}
-
-let editableItems = () => {
-    /* Editable List Name */
-    let allListNameDOM = document.querySelectorAll('.listName')
-    allListNameDOM.forEach((listNameDOM) => {
-        listNameDOM.contentEditable = true
-        listNameDOM.addEventListener('keyup', (event) => {
-            if(event.which == 13 && document.activeElement == listNameDOM){
-                event.preventDefault()
-                event.stopPropagation()
-                let listId = event.target.parentNode.id
-                let newListName = event.target.innerText
-                newListName = newListName.replace(/\n/g, '')
-                lists[listId]['listName'] = newListName
-                storeList()
-                listNameDOM.blur()
-                ReactDOM.render(<App />, document.querySelector('body'))
-            }
-        })
-    })
-
-    /* Editable List Items */
-    let allTaskCardContentDOM = document.querySelectorAll('.taskCardContent')
-    allTaskCardContentDOM.forEach((taskCardContentDOM) => {
-        taskCardContentDOM.contentEditable = true
-        taskCardContentDOM.addEventListener('keyup', (event) => {
-            if(event.which == 13 && document.activeElement == taskCardContentDOM){
-                event.preventDefault()
-                event.stopPropagation()
-                let taskId = event.target.parentNode.id
-                let listId = event.target.parentNode.parentNode.parentNode.id
-                let newTaskName = event.target.innerText
-                newTaskName = newTaskName.replace(/\n/g, '')
-                console.log(newTaskName)
-                let index = lists[listId]['listItems'].findIndex((task) => {
-                    return task['id'] === taskId
-                })
-                lists[listId]['listItems'][index]['taskContent'] = newTaskName
-                storeList()
-                taskCardContentDOM.blur()
-                ReactDOM.render(<App />, document.querySelector('body'))
-            }
-        })
-    })
-
 }
 
 let startUp = () => {
