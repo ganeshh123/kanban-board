@@ -18,7 +18,10 @@ class Task extends React.Component {
     deleteTaskClicked = (event) => {
         let taskId = event.target.parentNode.id
         let listId = event.target.parentNode.parentNode.parentNode.id
-        lists[listId]['listItems'][taskId] = undefined
+        let index = lists[listId]['listItems'].findIndex((task) => {
+            return task['id'] === taskId
+        })
+        lists[listId]['listItems'].splice(index, 1)
         storeList()
         setTimeout(this.props.refresh(), 1000)
     }
@@ -26,12 +29,23 @@ class Task extends React.Component {
     render = () => {
 
         return(
-            <div class="taskCard" id={this.props.task['id']}>
-                <p class="taskCardContent">
-                   {this.props.task['taskContent']}
-                </p>
-                <img class="icon deleteTaskIcon" src="./assets/cancel-circle.svg" alt="Delete Task" onClick={this.deleteTaskClicked}/>
-            </div>
+            <Draggable draggableId={this.props.task['id']} index={this.props.index}>
+            {(provided) => {
+                return(
+                    <div class="taskCard" 
+                        id={this.props.task['id']}
+                        {...provided.draggableProps}
+                        {...provided.dragHandleProps}
+                        ref={provided.innerRef}
+                    >
+                        <p class="taskCardContent">
+                        {this.props.task['taskContent']}
+                        </p>
+                        <img class="icon deleteTaskIcon" src="./assets/cancel-circle.svg" alt="Delete Task" onClick={this.deleteTaskClicked}/>
+                    </div>
+                )
+            }}
+            </Draggable>
         )
     }
 }
@@ -43,10 +57,10 @@ class List extends React.Component {
         let newTaskId = Math.random().toString(36).substring(2, 15)
         let newTaskContent = document.querySelector('#' + listId).childNodes[2].childNodes[0].value
         if(newTaskContent && newTaskContent != ''){
-            lists[listId]['listItems'][newTaskId] = {
+            lists[listId]['listItems'].push({
                 'id': newTaskId,
                 'taskContent': newTaskContent
-            }
+            })
         }
         storeList()
         document.querySelector('#' + listId).childNodes[2].childNodes[0].value = ''
@@ -65,17 +79,28 @@ class List extends React.Component {
         return(
             <div class="listContainer" id={this.props.list['id']}>
                 <h4 class="listName">{this.props.list['listName']}</h4>
-                <div id="taskList">
-                    {Object.values(this.props.list['listItems']).map((listItem) =>{
-                        if(listItem){
-                            return <Task 
-                                    id={listItem['id']} 
-                                    task={listItem} 
-                                    refresh = {this.props.refresh}
-                                />
-                        }
-                    })}
-                </div>
+                <Droppable droppableId={this.props.list['id']}>
+                {
+                    (provided) => {
+                        return(
+                        <div id="taskList" {...provided.droppableProps} ref={provided.innerRef}>
+                            {Object.values(this.props.list['listItems']).map((listItem, index) =>{
+                                if(listItem){
+                                    return <Task 
+                                            id={listItem['id']} 
+                                            task={listItem} 
+                                            refresh = {this.props.refresh}
+                                            index={index}
+                                        />
+                                }
+                            })}
+                            {provided.placeholder}
+                        </div>
+                        )
+                    }
+                }
+                
+                </Droppable>
                 <div class="newListItem">
                     <input 
                         type="text"
@@ -101,6 +126,28 @@ class App extends React.Component{
         appLists: lists
     }
 
+    onDragEnd = (result) => {
+        console.log(result)
+        // Todo : Reorder Column
+        let originListId = result.source.droppableId
+        let originIndex = result.source.index
+        let destinationListId = result.destination.droppableId
+        let destinationIndex = result.destination.index
+
+        let movedTask = lists[originListId]['listItems'][originIndex]
+        console.log(movedTask)
+
+        if(destinationListId != originListId){
+            lists[destinationListId]['listItems'].splice(destinationIndex, 0, movedTask)
+            lists[originListId]['listItems'].splice(originIndex, 1)
+        }else{
+            lists[originListId]['listItems'].splice(destinationIndex, 0, lists[originListId]['listItems'].splice(originIndex, 1)[0]);
+        }
+
+       this.refreshApp()
+
+    }
+
     refreshApp = () => {
         console.log('Refreshing...')
         this.setState({
@@ -112,9 +159,13 @@ class App extends React.Component{
     render = () => {
             return(
                 <div id="app">
+                <DragDropContext
+                    onDragEnd={this.onDragEnd}
+                >
                     {Object.values(this.state.appLists).map((list) => {
                         return <List list={list} refresh={this.refreshApp}/>
                     })}
+                </DragDropContext>
                 </div>
             )
     }
@@ -173,10 +224,10 @@ let startUp = () => {
         let list1 = {
             "id" : "y0zitt47gfb",
             "listName": "To Do",
-            "listItems" : {
-                "v0zigt47whc": {"id" : "v0zigt47whc", "taskContent" : "Buy Milk"},
-                "b0zi5t4rwhc" : {"id" : "b0zi5t4rwhc", "taskContent" : "Work Out"}
-            }
+            "listItems" : [
+                {"id" : "v0zigt47whc", "taskContent" : "Buy Milk"},
+                {"id" : "b0zi5t4rwhc", "taskContent" : "Work Out"}
+            ]
         }
         lists['y0zitt47gfb'] = list1
         storeList()
