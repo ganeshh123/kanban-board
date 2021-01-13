@@ -83,7 +83,7 @@ class List extends React.Component {
                 {
                     (provided) => {
                         return(
-                        <div id="taskList" {...provided.droppableProps} ref={provided.innerRef}>
+                        <div class="taskList" {...provided.droppableProps} ref={provided.innerRef}>
                             {Object.values(this.props.list['listItems']).map((listItem, index) =>{
                                 if(listItem){
                                     return <Task 
@@ -129,22 +129,35 @@ class App extends React.Component{
     onDragEnd = (result) => {
         console.log(result)
         // Todo : Reorder Column
-        let originListId = result.source.droppableId
-        let originIndex = result.source.index
-        let destinationListId = result.destination.droppableId
-        let destinationIndex = result.destination.index
+        if(result.reason === "DROP"){
+            let originListId = result.source.droppableId
+            let originIndex = result.source.index
+            if(!result.destination){
+                console.log('crap')
+                storeList()
+                this.refreshApp()
+                return
+            }else{
+                let destinationListId = result.destination.droppableId
+                let destinationIndex = result.destination.index
 
-        let movedTask = lists[originListId]['listItems'][originIndex]
-        console.log(movedTask)
+                let movedTask = lists[originListId]['listItems'][originIndex]
+                console.log(movedTask)
 
-        if(destinationListId != originListId){
-            lists[destinationListId]['listItems'].splice(destinationIndex, 0, movedTask)
-            lists[originListId]['listItems'].splice(originIndex, 1)
-        }else{
-            lists[originListId]['listItems'].splice(destinationIndex, 0, lists[originListId]['listItems'].splice(originIndex, 1)[0]);
+                if(destinationListId != originListId){
+                    lists[destinationListId]['listItems'].splice(destinationIndex, 0, movedTask)
+                    lists[originListId]['listItems'].splice(originIndex, 1)
+                }else{
+                    lists[originListId]['listItems'].splice(destinationIndex, 0, lists[originListId]['listItems'].splice(originIndex, 1)[0]);
+                }
+
+                console.log(lists)
+                
+                storeList()
+                this.refreshApp()
+            }
+            
         }
-
-       this.refreshApp()
 
     }
 
@@ -223,13 +236,21 @@ let startUp = () => {
         lists = {}
         let list1 = {
             "id" : "y0zitt47gfb",
-            "listName": "To Do",
+            "listName": "Today",
             "listItems" : [
                 {"id" : "v0zigt47whc", "taskContent" : "Buy Milk"},
-                {"id" : "b0zi5t4rwhc", "taskContent" : "Work Out"}
+                {"id" : "b0zi5t4rwhc", "taskContent" : "Take out the Garbage"}
+            ]
+        }
+        let list2 = {
+            "id" : "f0ziqq7gfn",
+            "listName": "This Week",
+            "listItems" : [
+                {"id" : "fk8vs85v0wh", "taskContent" : "Visit Bob"},
             ]
         }
         lists['y0zitt47gfb'] = list1
+        lists['f0ziqq7gfn'] = list2
         storeList()
     }
 
@@ -238,5 +259,6 @@ let startUp = () => {
 }
 
 startUp()
+
 
 
