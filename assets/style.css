@@ -1,13 +1,18 @@
 html, body{
-    height: 100%;
-    width: 100%;
-    margin: 0px;
+    height: 100% !important;
+    width: 100% !important;
+    margin: 0px !important;
 }
 
 body{
     display: flex;
     justify-content: center;
     align-items: center;
+    background: url(https://images.unsplash.com/photo-1528164344705-47542687000d?ixid=MXwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHw%3D&ixlib=rb-1.2.1&auto=format&fit=crop&w=1969&q=80) no-repeat center center fixed; 
+    -webkit-background-size: cover;
+    -moz-background-size: cover;
+    -o-background-size: cover;
+    background-size: cover;
 }
 
 #app{
@@ -17,7 +22,11 @@ body{
     align-items: center;
     height: 95%;
     width: 90%;
-
+    background: rgba( 255, 255, 255, 0.35 );
+    box-shadow: 0 8px 32px 0 rgba( 31, 38, 135, 0.37 );
+    backdrop-filter: blur( 5.0px );
+    -webkit-backdrop-filter: blur( 5.0px );
+    border-radius: 10px;
 }
 
 .listContainer{
@@ -33,6 +42,13 @@ body{
     min-height: 600px;
     min-width: 250px;
     height: 90%;
+    /*
+    background: rgba( 255, 255, 255, 0.25 );
+    box-shadow: 0 8px 32px 0 rgba( 31, 38, 135, 0.37 );
+    backdrop-filter: blur( 8.0px );
+    -webkit-backdrop-filter: blur( 8.0px );
+    border-radius: 10px;
+    */
 }
 
 .listHeader{
@@ -47,11 +63,11 @@ body{
 }
 
 .taskList{
-    background-color: orange;
     min-height: 520px !important;
-    max-height: 520px;
+    height: 90%;
     width: 100%;
     overflow-y: auto;
+    
 }
 
 .newListItem{
