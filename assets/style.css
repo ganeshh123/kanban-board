@@ -18,7 +18,7 @@ body{
 #app{
     display: flex;
     flex-direction: row;
-    justify-content: center;
+    justify-content: flex-start;
     align-items: center;
     height: 95%;
     width: 90%;
@@ -29,8 +29,8 @@ body{
     box-shadow: 0 8px 32px 0 rgba( 31, 38, 135, 0.37 );
     backdrop-filter: blur( 5.0px );
     -webkit-backdrop-filter: blur( 5.0px );
-    border-radius: 10px;
     */
+    border-radius: 10px;
 }
 
 .listContainer{
@@ -38,7 +38,7 @@ body{
     margin-left: 20px;
     display: flex;
     flex-direction: column;
-    justify-content: flex-start;
+    justify-content: space-between;
     align-items: center;
     background-color: aqua;
     padding: 20px;
@@ -67,12 +67,14 @@ body{
 .taskList{
     min-height: 520px !important;
     height: 90%;
+    max-height: 525px;
     width: 100%;
     overflow-y: auto;
     
 }
 
 .newListItem{
+    margin-top: 25px;
     display: flex;
     flex-direction: row;
     justify-content: space-around;
@@ -119,21 +121,11 @@ body{
     margin-left: 20px;
     background: rgba( 255, 255, 255, 0.45 );
     box-shadow: 0 8px 32px 0 rgba( 31, 38, 135, 0.37 );
-    backdrop-filter: blur( 8.0px );
     -webkit-backdrop-filter: blur( 8.0px );
     border-radius: 10px;
     padding: 20px;
 }
 
-@-webkit-keyframes fadein {
-    from { opacity: 0; }
-    to { opacity: 1; }
-}
-
-@-moz-keyframes fadein {
-    from { opacity: 0; }
-    to { opacity: 1; }
-}
 
 @keyframes fadein {
     from { opacity: 0; }
@@ -141,7 +133,24 @@ body{
 }
 
 *{
-    -webkit-animation: fadein 0.5s;
-    -moz-animation: fadein 0.5s;
     animation: fadein 0.5s;
+}
+
+::-webkit-scrollbar {
+    background-color: rgb(244, 244, 244);
+    height: 7px;
+    width: 7px;
+    border-radius: 10px;
+}
+
+::-webkit-scrollbar-button {
+    background-color: rgb(255, 255, 255);
+    height: 0px;
+    width: 0px;
+    border-radius: 0px;
+}
+
+::-webkit-scrollbar-thumb {
+    background: rgb(86, 86, 86);
+    border-radius: 10px;
 }
