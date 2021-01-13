@@ -52,7 +52,7 @@ class Task extends React.Component {
 
 class List extends React.Component {
 
-    addTaskClicked = (event) => {
+    addListClicked = (event) => {
         let listId = event.target.parentNode.parentNode.id
         let newTaskId = Math.random().toString(36).substring(2, 15)
         let newTaskContent = document.querySelector('#' + listId).childNodes[2].childNodes[0].value
@@ -67,6 +67,13 @@ class List extends React.Component {
         setTimeout(this.props.refresh(), 2000)
     }
 
+    deleteListClicked = (event) => {
+        let listId = event.target.parentNode.parentNode.id
+        lists[listId] = undefined
+        storeList()
+        setTimeout(this.props.refresh(), 2000)
+    }
+
     keyPress = (event) => {
         if(event.key === 'Enter'){
             event.preventDefault()
@@ -78,7 +85,10 @@ class List extends React.Component {
     render = () => {
         return(
             <div class="listContainer" id={this.props.list['id']}>
-                <h4 class="listName">{this.props.list['listName']}</h4>
+                <div class="listHeader">
+                    <h4 class="listName">{this.props.list['listName']}</h4>
+                    <img class="icon deleteListIcon" src="./assets/cancel-circle.svg" alt="Delete List" onClick={this.deleteListClicked}/>
+                </div>
                 <Droppable droppableId={this.props.list['id']}>
                 {
                     (provided) => {
@@ -112,7 +122,7 @@ class List extends React.Component {
                         class="icon addTaskIcon"
                         src="./assets/plus.svg"
                         alt="Add Task"
-                        onClick={this.addTaskClicked}
+                        onClick={this.addListClicked}
                     />
                 </div>
             </div>
@@ -161,6 +171,21 @@ class App extends React.Component{
 
     }
 
+    createList = () => {
+        let newListId = Math.random().toString(36).substring(2, 15)
+        let newList = {
+            "id": newListId,
+            "listName": "New List",
+            "listItems": [
+
+            ]
+        }
+        lists[newListId] = newList
+        storeList()
+        window.setTimeout(editableItems(), 2000)
+        this.refreshApp()
+    }
+
     refreshApp = () => {
         console.log('Refreshing...')
         this.setState({
@@ -179,6 +204,12 @@ class App extends React.Component{
                         return <List list={list} refresh={this.refreshApp}/>
                     })}
                 </DragDropContext>
+                <img 
+                    class="icon addTaskIcon"
+                    src="./assets/plus.svg"
+                    alt="Add Task"
+                    onClick={this.createList}
+                />
                 </div>
             )
     }
