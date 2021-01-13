@@ -217,7 +217,10 @@ let editableItems = () => {
                 let newTaskName = event.target.innerText
                 newTaskName = newTaskName.replace(/\n/g, '')
                 console.log(newTaskName)
-                lists[listId]['listItems'][taskId]['taskContent'] = newTaskName
+                let index = lists[listId]['listItems'].findIndex((task) => {
+                    return task['id'] === taskId
+                })
+                lists[listId]['listItems'][index]['taskContent'] = newTaskName
                 storeList()
                 taskCardContentDOM.blur()
                 ReactDOM.render(<App />, document.querySelector('body'))
