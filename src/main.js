@@ -1,6 +1,4 @@
-let React = window.React
-let ReactDOM = window.ReactDOM
-let {DragDropContext, Draggable, Droppable } = window.ReactBeautifulDnd;
+let {DragDropContext, Draggable, Droppable} = window.ReactBeautifulDnd
 
 let lists = {}
 
@@ -14,52 +12,52 @@ let storeLists = () => {
 
 class Task extends React.Component {
 
-    deleteTaskClicked = (event) => {
-        let taskId = event.target.parentNode.id
-        let listId = event.target.parentNode.parentNode.parentNode.id
-        let index = lists[listId]['listItems'].findIndex((task) => {
-            return task['id'] === taskId
+    deleteTask = () => {
+        let listId = this.props.listId
+        let index = lists[listId]['tasks'].findIndex((task) => {
+            return task['taskId'] == this.props.inputTask['taskId']
         })
-        lists[listId]['listItems'].splice(index, 1)
+        lists[this.props.listId]['tasks'].splice(index, 1)
         storeLists()
-        setTimeout(this.props.refresh(), 1000)
+        this.props.refresh()
+    }
+    
+    taskContentChanged = (event) => {
+        let listId = this.props.listId
+        console.log(listId)
+        console.log(lists[listId])
+        console.log(this.props.inputTask)
+        let index = lists[listId]['tasks'].findIndex((task) => {
+            return task['taskId'] == this.props.inputTask['taskId']
+        })
+        console.log(index)
+        lists[listId]['tasks'][index]['taskDescription'] = event.target.innerText
     }
 
-    taskContentChanged = (event) => {
-        let listId = event.target.parentNode.parentNode.parentNode.id
-        let taskId = event.target.parentNode.id
-        let newTaskContent = event.target.innerText
-        //console.log(listId + ' ' + taskId + ' ' + newTaskContent)
-        let index = lists[listId]['listItems'].findIndex((task) => {
-            return task['id'] === taskId
-        })
-        lists[listId]['listItems'][index]['taskContent'] = newTaskContent
+
+    keyPress = (event) => {
+        if(event.key === 'Enter' && event.target.className == "taskCardContent"){
+            storeLists()
+            event.target.blur()
+            this.props.refresh()
+        }
     }
+
 
     render = () => {
 
         return(
-            <Draggable draggableId={this.props.task['id']} index={this.props.index}>
-            {(provided) => {
+            <Draggable draggableId={this.props.inputTask['taskId']} index={this.props.index}>
+            {
+            (provided) => {
                 return(
-                    <div class="taskCard" 
-                        id={this.props.task['id']}
-                        {...provided.draggableProps}
-                        {...provided.dragHandleProps}
-                        ref={provided.innerRef}
-                    >
-                        <p 
-                            class="taskCardContent"
-                            contentEditable = "true"
-                            onInput={this.taskContentChanged}
-                            onKeyDown={this.props.keyPress}
-                        >
-                        {this.props.task['taskContent']}
-                        </p>
-                        <img class="icon deleteTaskIcon" src="./assets/cancel-circle.svg" alt="Delete Task" onClick={this.deleteTaskClicked}/>
+                    <div class="taskCard" {...provided.draggableProps} {...provided.dragHandleProps} ref={provided.innerRef} id={this.props.inputTask['id']}>
+                        <p onKeyDown={this.keyPress} onInput={this.taskContentChanged} contentEditable="true" class="taskCardContent" > {this.props.inputTask['taskDescription']} </p>
+                        <img onClick={this.deleteTask} class="deleteTaskIcon" src="../assets/delete.svg" alt="Delete Task" />
                     </div>
                 )
-            }}
+            }
+            }
             </Draggable>
         )
     }
@@ -67,100 +65,75 @@ class Task extends React.Component {
 
 class List extends React.Component {
 
-    addTaskClicked = (event) => {
-        let listId = event.target.parentNode.parentNode.id
-        this.addTask(event.target.parentNode.parentNode.id)
+    addTask = () => {
+        let listId = this.props.inputList['listId']
+        let newTaskInput = document.getElementById(listId + 'Input')
+        if(newTaskInput.value != ''){
+                    let newTask = {
+                    taskId: Math.random().toString(36).substring(2, 15),
+                    taskDescription: newTaskInput.value
+                }
+            lists[listId]['tasks'].push(newTask)
+            storeLists()
+          }
+        newTaskInput.value = ''
+        this.props.refresh()
     }
 
-    deleteListClicked = (event) => {
-        let listId = event.target.parentNode.parentNode.id
+    deleteList = () => {
+        let listId = this.props.inputList['listId']
         lists[listId] = undefined
         storeLists()
-        setTimeout(this.props.refresh(), 2000)
+        this.props.refresh()
     }
 
+    listNameChanged = (event) => {
+        let listId = this.props.inputList['listId']
+        lists[listId]['listName'] = event.target.innerText
+    }
+    
     keyPress = (event) => {
-        if(event.key === 'Enter' || event.key === 'Escape'){
+        if(event.target.className == "newListItemInput" && event.key == "Enter"){
+            this.addTask()
+        }
+        if(event.target.className == "listName" && event.key == "Enter"){
             event.preventDefault()
             event.stopPropagation()
+            event.target.blur()
             storeLists()
             this.props.refresh()
-            event.target.blur()
         }
-        if(event.target.className === 'newListItemInput' && event.key === 'Enter'){
-            this.addTask(event.target.parentNode.parentNode.id)
-        }
-    }
-
-    addTask = (listId) => {
-        let newTaskId = Math.random().toString(36).substring(2, 15)
-        let newTaskContent = document.querySelector('#' + listId).childNodes[2].childNodes[0].value
-        if(newTaskContent && newTaskContent != ''){
-            lists[listId]['listItems'].push({
-                'id': newTaskId,
-                'taskContent': newTaskContent
-            })
-        }
-        storeLists()
-        document.querySelector('#' + listId).childNodes[2].childNodes[0].value = ''
-        setTimeout(this.props.refresh(), 2000)
-    }
-
-    titleTextChanged = (event) => {
-        let listId = event.target.parentNode.parentNode.id
-        let newListName = event.target.innerText
-        lists[listId]['listName'] = newListName
     }
 
     render = () => {
+
+       let list = this.props.inputList
+
         return(
-            <div class="listContainer" id={this.props.list['id']}>
+            <div class="listContainer" id={this.props.id}>
                 <div class="listHeader">
-                    <h4 class="listName" 
-                        contentEditable="true" 
-                        onInput={this.titleTextChanged}
-                        onKeyDown = {this.keyPress}
-                    >
-                        {this.props.list['listName']}
-                    </h4>
-                    <img class="icon deleteListIcon" src="./assets/cancel-circle.svg" alt="Delete List" onClick={this.deleteListClicked}/>
+                <h4 onKeyDown={this.keyPress} onInput={this.listNameChanged} contentEditable="true" class="listName">{list['listName']} </h4>
+                <img onClick={this.deleteList} class="deleteListIcon" src="../assets/delete.svg" alt="Delete List"/>
                 </div>
-                <Droppable droppableId={this.props.list['id']}>
+                <Droppable droppableId={list['listId']}>
                 {
-                    (provided) => {
-                        return(
+                (provided) => {
+                    return(
                         <div class="taskList" {...provided.droppableProps} ref={provided.innerRef}>
-                            {Object.values(this.props.list['listItems']).map((listItem, index) =>{
-                                if(listItem){
-                                    return <Task 
-                                            id={listItem['id']} 
-                                            task={listItem} 
-                                            refresh = {this.props.refresh}
-                                            index={index}
-                                            keyPress={this.keyPress}
-                                        />
-                                }
-                            })}
-                            {provided.placeholder}
+                        {Object.values(list['tasks']).map((task, index) =>{
+                            return (
+                                <Task index={index} inputTask={task} listId={list['listId']} refresh={this.props.refresh} />
+                            )
+                        })}
+                        {provided.placeholder}
                         </div>
-                        )
-                    }
+                    )
                 }
-                
+                }
                 </Droppable>
                 <div class="newListItem">
-                    <input 
-                        type="text"
-                        class="newListItemInput"
-                        placeholder="New Task ..." 
-                        onKeyDown = {this.keyPress}
-                    />
-                    <img 
-                        class="icon addTaskIcon"
-                        src="./assets/circle-right.svg"
-                        alt="Add Task"
-                        onClick={this.addTaskClicked}
-                    />
+                    <input onKeyDown={this.keyPress} id={list['listId'] + 'Input'} type="text" class="newListItemInput" placeholder="New Task ..." />
+                    <img class="addTaskIcon" onClick={this.addTask} src="../assets/submit.svg" alt="Add Task"/>
                 </div>
             </div>
         )
@@ -176,51 +149,31 @@ class App extends React.Component{
     onDragEnd = (result) => {
         console.log(result)
         // Todo : Reorder Column
-        if(result.reason === "DROP"){
+        if(result.reason === "DROP" && result.destination){
             let originListId = result.source.droppableId
             let originIndex = result.source.index
-            if(!result.destination){
-                console.log('crap')
-                storeLists()
-                this.refreshApp()
-                return
-            }else{
-                let destinationListId = result.destination.droppableId
-                let destinationIndex = result.destination.index
-
-                let movedTask = lists[originListId]['listItems'][originIndex]
-                console.log(movedTask)
-
-                if(destinationListId != originListId){
-                    lists[destinationListId]['listItems'].splice(destinationIndex, 0, movedTask)
-                    lists[originListId]['listItems'].splice(originIndex, 1)
-                }else{
-                    lists[originListId]['listItems'].splice(destinationIndex, 0, lists[originListId]['listItems'].splice(originIndex, 1)[0]);
-                }
-
-                console.log(lists)
-                
-                storeLists()
-                this.refreshApp()
-            }
-            
+            let destinationListId = result.destination.droppableId
+            let destinationIndex = result.destination.index
+    
+            let movedTask = lists[originListId]['tasks'][originIndex]
+                    lists[originListId]['tasks'].splice(originIndex, 1)
+                    lists[destinationListId]['tasks'].splice(destinationIndex, 0, movedTask);
         }
-
+            storeLists()
+        this.refreshApp()
     }
 
     createList = () => {
         let newListId = Math.random().toString(36).substring(2, 15)
-        let newList = {
-            "id": newListId,
+        lists[newListId] = {
+            "listId": newListId,
             "listName": "New List",
-            "listItems": [
-
-            ]
+            "tasks": []
         }
-        lists[newListId] = newList
         storeLists()
         this.refreshApp()
-    }
+  }
+
 
     refreshApp = () => {
         console.log('Refreshing...')
@@ -232,19 +185,12 @@ class App extends React.Component{
     render = () => {
             return(
                 <div id="app">
-                <DragDropContext
-                    onDragEnd={this.onDragEnd}
-                >
+                <DragDropContext onDragEnd={this.onDragEnd}>
                     {Object.values(this.state.appLists).map((list) => {
-                        return <List list={list} refresh={this.refreshApp}/>
+                        return <List id={list['listId']} inputList={list} refresh={this.refreshApp}/>
                     })}
                 </DragDropContext>
-                <img 
-                    class="icon addListIcon"
-                    src="./assets/plus.svg"
-                    alt="Add Task"
-                    onClick={this.createList}
-                />
+                <img src="../assets/plus.svg" class="addListIcon" alt="Add Task" onClick={this.createList} />
                 </div>
             )
     }
@@ -256,31 +202,27 @@ let startUp = () => {
         lists = JSON.parse(localStorage.getItem('listStore'))
     }else{
         console.log('Creating List in Storage')
-        lists = {}
-        let list1 = {
-            "id" : "y0zitt47gfb",
-            "listName": "Today",
-            "listItems" : [
-                {"id" : "v0zigt47whc", "taskContent" : "Buy Milk"},
-                {"id" : "b0zi5t4rwhc", "taskContent" : "Take out the Garbage"}
-            ]
+        lists = {
+            y0zitt47gfb: {
+                listId: 'y0zitt47gfb',
+                listName: 'Today',
+                tasks: [
+                    { taskId: 'v0zigt47whc', taskDescription: 'Buy Milk'},
+                    { taskId: 'b0zi5t4rwhc', taskDescription: 'Take out the Garbage'}
+                ]
+            },
+            f0ziqq7gfn: {
+                listId: 'f0ziqq7gfn',
+                listName: 'This Week',
+                tasks: [
+                    { taskId: 'fk8vs85v0wh', taskDescription: 'Visit Bob'}
+                    ]
+            }
         }
-        let list2 = {
-            "id" : "f0ziqq7gfn",
-            "listName": "This Week",
-            "listItems" : [
-                {"id" : "fk8vs85v0wh", "taskContent" : "Visit Bob"},
-            ]
-        }
-        lists['y0zitt47gfb'] = list1
-        lists['f0ziqq7gfn'] = list2
         storeLists()
     }
 
-    ReactDOM.render(<App />, document.querySelector('body'))
+    ReactDOM.render(<App />, document.body)
 }
 
 startUp()
-
-
-

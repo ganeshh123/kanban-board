@@ -8,7 +8,7 @@ body{
     display: flex;
     justify-content: center;
     align-items: center;
-    background: url(./mountain.jpg) no-repeat center center fixed; 
+    background: url(../assets/background.jpg) no-repeat center center fixed; 
     background-size: cover;
     overflow-x: auto;
 }
@@ -21,6 +21,19 @@ body{
     height: 95%;
     width: 100%;
     margin: 20px;
+}
+
+.addListIcon{
+    padding: 0px 15px 0px 15px;
+    margin: 0px 20px 0px 20px;
+    min-height: 650px;
+    height: 90%;
+    max-height: 1000px;
+    width: 40px;
+    background: rgba( 255, 255, 255, 0.45 );
+    box-shadow: 0 8px 32px 0 rgba( 31, 38, 135, 0.37 );
+    border-radius: 10px;
+    cursor: pointer;
 }
 
 .listContainer{
@@ -70,7 +83,6 @@ body{
   
 }
 
-
 .newListItem{
     display: flex;
     flex-direction: row;
@@ -80,18 +92,6 @@ body{
     padding-bottom: 10px;
     height: 10%;
     width: 100%;
-}
-
-.newListItemInput{
-    margin: 10px;
-    height: 30px;
-    width: 100%;
-}
-
-.addTaskIcon{
-    height: 50px;
-    width: auto;
-    margin: 10px;
 }
 
 .taskCard{
@@ -121,17 +121,16 @@ body{
     cursor: pointer;
 }
 
-.addListIcon{
-    padding: 0px 15px 0px 15px;
-    margin: 0px 20px 0px 20px;
-    min-height: 650px;
-    height: 90%;
-    max-height: 1000px;
-    width: 40px;
-    background: rgba( 255, 255, 255, 0.45 );
-    box-shadow: 0 8px 32px 0 rgba( 31, 38, 135, 0.37 );
-    border-radius: 10px;
-    cursor: pointer;
+.newListItemInput{
+    margin: 10px;
+    height: 30px;
+    width: 100%;
+}
+
+.addTaskIcon{
+    height: 50px;
+    width: auto;
+    margin: 10px;
 }
 
 /* Animations */
