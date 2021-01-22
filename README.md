@@ -15,7 +15,7 @@ https://ganeshh123.github.io/kanban-board/
 There is no need to build. The app uses script tags to load in React, React Beautiful DND, Babel and Skeleton CSS.
 ### Running Locally
 1. Download or clone this repository
-2. Run index.html as a server
+2. Run index.html as a server  
 Needs to be run as a server, as Babel cannot access the file system.
 ### Technology Stack
 - [React](https://github.com/facebook/react) for List and Task Components
