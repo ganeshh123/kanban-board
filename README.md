@@ -16,7 +16,8 @@ There is no need to build. The app uses script tags to load in React, React Beau
 ### Running Locally
 1. Download or clone this repository
 2. Run index.html as a server  
-Needs to be run as a server, as Babel cannot access the file system.
+### Web Server
+Needs to be run as a server locally, as Babel cannot access the file system. I recommend using [Live Server](https://marketplace.visualstudio.com/items?itemName=ritwickdey.LiveServer) for VS Code. Can be hosted online as a regular page.
 ### Technology Stack
 - [React](https://github.com/facebook/react) for List and Task Components
 - [react-beautiful-dnd](https://github.com/atlassian/react-beautiful-dnd) for draggable tasks
