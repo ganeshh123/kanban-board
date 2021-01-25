@@ -133,7 +133,7 @@ class List extends React.Component {
                 </Droppable>
                 <div class="newListItem">
                     <input onKeyDown={this.keyPress} id={list['listId'] + 'Input'} type="text" class="newListItemInput" placeholder="New Task ..." />
-                    <img class="addTaskIcon" onClick={this.addTask} src="/assets/submit.svg" alt="Add Task"/>
+                    <img class="addTaskIcon" onClick={this.addTask} src="../assets/submit.svg" alt="Add Task"/>
                 </div>
             </div>
         )
