@@ -53,7 +53,7 @@ class Task extends React.Component {
                 return(
                     <div class="taskCard" {...provided.draggableProps} {...provided.dragHandleProps} ref={provided.innerRef} id={this.props.inputTask['id']}>
                         <p onKeyDown={this.keyPress} onInput={this.taskContentChanged} contentEditable="true" class="taskCardContent" > {this.props.inputTask['taskDescription']} </p>
-                        <img onClick={this.deleteTask} class="deleteTaskIcon" src="kaban-board/assets/delete.svg" alt="Delete Task" />
+                        <img onClick={this.deleteTask} class="deleteTaskIcon" src="assets/delete.svg" alt="Delete Task" />
                     </div>
                 )
             }
@@ -113,7 +113,7 @@ class List extends React.Component {
             <div class="listContainer" id={this.props.id}>
                 <div class="listHeader">
                 <h4 onKeyDown={this.keyPress} onInput={this.listNameChanged} contentEditable="true" class="listName">{list['listName']} </h4>
-                <img onClick={this.deleteList} class="deleteListIcon" src="kaban-board/assets/delete.svg" alt="Delete List"/>
+                <img onClick={this.deleteList} class="deleteListIcon" src="assets/delete.svg" alt="Delete List"/>
                 </div>
                 <Droppable droppableId={list['listId']}>
                 {
@@ -133,7 +133,7 @@ class List extends React.Component {
                 </Droppable>
                 <div class="newListItem">
                     <input onKeyDown={this.keyPress} id={list['listId'] + 'Input'} type="text" class="newListItemInput" placeholder="New Task ..." />
-                    <img class="addTaskIcon" onClick={this.addTask} src="kaban-board/assets/submit.svg" alt="Add Task"/>
+                    <img class="addTaskIcon" onClick={this.addTask} src="assets/submit.svg" alt="Add Task"/>
                 </div>
             </div>
         )
@@ -190,7 +190,7 @@ class App extends React.Component{
                         return <List id={list['listId']} inputList={list} refresh={this.refreshApp}/>
                     })}
                 </DragDropContext>
-                <img src="kaban-board/assets/plus.svg" class="addListIcon" alt="Add Task" onClick={this.createList} />
+                <img src="assets/plus.svg" class="addListIcon" alt="Add Task" onClick={this.createList} />
                 </div>
             )
     }
